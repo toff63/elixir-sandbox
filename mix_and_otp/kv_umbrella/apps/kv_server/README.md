@@ -1,6 +1,8 @@
 # KVServer
 
-**TODO: Add description**
+TCP server on top of the OTP server KV. It parses command line and call the KV server.
+
+This is a demo app to learn how to design a distributed application using OTP. The details can be found on [Elixir web page](https://elixir-lang.org/getting-started/mix-otp/task-and-gen-tcp.html)
 
 ## Installation
 
