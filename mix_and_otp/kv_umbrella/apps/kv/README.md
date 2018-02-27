@@ -1,6 +1,6 @@
 # KV
 
-**TODO: Add description**
+This is a bucket registry using ETS, Agents and Supervisors. This is a demo App. In a real world application you would use the [Registry module](https://hexdocs.pm/elixir/Registry.html)
 
 ## Installation
 
