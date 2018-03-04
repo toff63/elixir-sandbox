@@ -27,19 +27,9 @@ defmodule KVServer do
   end
 
   defp parse_and_execute_command(socket) do
-    case read_line(socket) do
-      {:ok, data} ->
-        case KVServer.Command.parse(data) do
-          {:ok, command} ->
-            KVServer.Command.run(command)
-
-          {:error, _} = err ->
-            err
-        end
-
-      {:error, _} = err ->
-        err
-    end
+    with {:ok, data} <- read_line(socket),
+         {:ok, command} <- KVServer.Command.parse(data),
+         do: KVServer.Command.run(command)
   end
 
   defp read_line(socket) do
