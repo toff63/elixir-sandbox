@@ -2,8 +2,6 @@ require Logger
 
 defmodule KVServer do
   def accept(port) do
-    :observer.start()
-
     {:ok, socket} =
       :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
 
@@ -44,14 +42,19 @@ defmodule KVServer do
     :gen_tcp.send(socket, "UNKNOWN COMMAND\r\n")
   end
 
+  defp write_line(socket, {:error, :not_found}) do
+    :gen_tcp.send(socket, "NOT FOUND\r\n")
+  end
+
+  defp write_line(_socket,  {:error, :closed}) do
+    # The connection was closed, exit politely.
+    exit(:shutdown)
+  end
+
+
   defp write_line(socket, {:error, error}) do
     # Unknown error. Write to the client and exit.
     :gen_tcp.send(socket, "ERROR\r\n")
     exit(error)
-  end
-
-  defp write_line(_socket, :closed) do
-    # The connection was closed, exit politely.
-    exit(:shutdown)
   end
 end
