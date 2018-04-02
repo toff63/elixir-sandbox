@@ -1,4 +1,4 @@
-defmodule EventServer do
+defmodule Reminder.EventServer do
   defmodule State do
     defstruct server: "", name: "", to_go: 0
   end
@@ -8,14 +8,14 @@ defmodule EventServer do
 
       ied> parent = self()
       #PID<0.115.0>
-      iex> spawn fn -> EventServer.loop(%EventServer.State{server: parent, name: "test", to_go: 5}) end
+      iex> spawn fn -> Reminder.EventServer.loop(%Reminder.EventServer.State{server: parent, name: "test", to_go: 5}) end
       #PID<0.106.0>
       iex> flush()
       :ok
       iex> flush()
       {:done, "test"}
       :ok
-      iex> pid = spawn fn -> EventServer.loop(%EventServer.State{server: parent, name: "test", to_go: 500}) end
+      iex> pid = spawn fn -> Reminder.EventServer.loop(%Reminder.EventServer.State{server: parent, name: "test", to_go: 500}) end
       #PID<0.122.0>
       iex> reply_ref = make_ref()
       #Reference<0.0.6.527>
@@ -24,12 +24,12 @@ defmodule EventServer do
       iex> flush()
       {:ok, #Reference<0.0.6.527>}
       :ok
-      iex> pid = spawn fn -> EventServer.loop(%EventServer.State{server: parent, name: "test", to_go: 365*24*60*60}) end
+      iex> pid = spawn fn -> Reminder.EventServer.loop(%Reminder.EventServer.State{server: parent, name: "test", to_go: 365*24*60*60}) end
       #PID<0.127.0>
       iex>
       22:06:50.136 [error] Process #PID<0.127.0> raised an exception
       ** (ErlangError) Erlang error: :timeout_value
-          (event_server) lib/event_server.ex:20: EventServer.loop/1
+          (event_server) lib/event_server.ex:37: Reminder.EventServer.loop/1
 
   """
   def loop(%State{server: server, name: name, to_go: to_go}) do

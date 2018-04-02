@@ -1,3 +1,3 @@
-defmodule EventServerTest do
+defmodule Reminder.EventServerTest do
   use ExUnit.Case
 end
