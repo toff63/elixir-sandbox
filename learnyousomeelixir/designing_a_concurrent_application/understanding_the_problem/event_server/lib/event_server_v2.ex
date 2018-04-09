@@ -1,20 +1,34 @@
 defmodule Reminder.EventServerV2 do
+  require Logger
+
   defmodule State do
     defstruct server: "", name: "", to_go: [0]
   end
 
   @doc """
-  iex(1)> Reminder.EventServerV2.start(self(), "Event", NaiveDateTime.utc_now())
-  #PID<0.105.0>
-  iex(2)> flush()
+    To this reminder server we add:
+      * a client api to spawn processes
+      * a format to receive the timeout that is not limited by the VM limits
+
+  iex(1)> NaiveDateTime.utc_now()
+  ~N[2018-04-02 18:49:44.776000]
+  iex(2)> Reminder.EventServerV2.start(self(), "Event", {{2018,04,02},{18,50,15}})
+  #PID<0.106.0>
+  iex(3)> flush()
+  :ok
+  iex(4)> NaiveDateTime.utc_now()
+  ~N[2018-04-02 18:50:10.027000]
+  iex(5)> NaiveDateTime.utc_now()
+  ~N[2018-04-02 18:50:15.587000]
+  iex(6)> flush()
   {:done, "Event"}
   :ok
-  iex(3)> pid = Reminder.EventServerV2.start(self(), "Event", ~N[2200-01-01 00:00:00])
-  #PID<0.108.0>
-  iex(4)> Reminder.EventServerV2.cancel(pid)
+  iex(7)> pid = Reminder.EventServerV2.start(self(), "Event", {{2200,01,01},{00,00,00}})
+  #PID<0.112.0>
+  iex(8)> Reminder.EventServerV2.cancel(pid)
   :ok
-  iex(5)> flush()
-  {:ok, #Reference<0.0.3.506>}
+  iex(9)> flush()
+  {:ok, #Reference<0.0.6.976>}
   :ok
   """
   def start(parent, event_name, date_time) do
@@ -29,8 +43,8 @@ defmodule Reminder.EventServerV2 do
     loop(%State{server: server, name: event_name, to_go: time_to_go(date_time)})
   end
 
-  def time_to_go({{year, month, day}, {hour,minute,second}}) do
-    until_naive_datetime = %NaiveDateTime{year: year, month: month, day: day, hour: hour, minute: minute, second: second}
+  def time_to_go(timeout = {{_, _, _}, {_, _, _}}) do
+    {:ok, until_naive_datetime} = NaiveDateTime.from_erl(timeout)
     to_go = NaiveDateTime.diff(until_naive_datetime, NaiveDateTime.utc_now())
     normalize(to_go)
   end
@@ -43,9 +57,9 @@ defmodule Reminder.EventServerV2 do
     send(pid, {:cancel, self(), ref})
 
     receive do
-      {^ref, ok} ->
+      {:ok, ^ref} ->
         Process.demonitor(ref, [:flush])
-        ok
+        :ok
 
       {:DOWN, ^ref, :process, _pid, _reason} ->
         :ok
@@ -63,7 +77,7 @@ defmodule Reminder.EventServerV2 do
 
   def loop(state = %State{server: server, name: name, to_go: [t | next]}) do
     receive do
-      {:cancel, server, ref} -> send(server, {:ok, ref})
+      {:cancel, client, ref} -> send(client, {:ok, ref})
     after
       t * 1000 ->
         case next do
