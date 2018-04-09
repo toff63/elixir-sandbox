@@ -1,6 +1,6 @@
-defmodule Reminder.ServerV3 do
+defmodule Reminder.Server do
     require Logger
-    
+
     defmodule State do
         defstruct events: [], clients: []
     end
@@ -8,6 +8,15 @@ defmodule Reminder.ServerV3 do
         defstruct name: "", description: "", pid: "", timeout: {{1970,01,01}, {00,00,00}}
     end
 
+    @doc """
+    This version adds the Reminder server which interacts with event processes. It handles 
+        * client registration
+        * add of reminder
+        * cancel of reminers
+        * inform client when a reminder is done
+        * hot swap code
+        * shutdown
+    """
     def start() do
         spawn(fn -> init() end)
     end
@@ -48,7 +57,7 @@ defmodule Reminder.ServerV3 do
     end
     
     @doc """
-        iex(1)> pid = Reminder.ServerV3.start()
+        iex(1)> pid = Reminder.Server.start()
         #PID<0.120.0>
         iex(2)> repl_pid = self()
         #PID<0.118.0>
@@ -94,7 +103,7 @@ defmodule Reminder.ServerV3 do
             {:done, name} -> handle_done(state, name)
             {:shutdown} -> exit(:shutdown)
             {:DOWN, ref, :process, _pid, _reason} -> loop(%{state | clients: Map.drop(clients, [ref])})
-            {:code_change} -> Reminder.ServerV3.loop(state)
+            {:code_change} -> Reminder.Server.loop(state)
             unknown  -> 
                 Logger.info("Unknown message: #{inspect(unknown)}")
                 loop(state)
@@ -111,7 +120,7 @@ defmodule Reminder.ServerV3 do
     def handle_add(state = %State{events: events, clients: _clients}, name, description, timeout, pid, msg_ref) do
         case valid_datetime(timeout) do
             true ->
-                event_pid = Reminder.EventServerV2.start_link(self(), name, timeout)
+                event_pid = Reminder.EventV2.start_link(self(), name, timeout)
                 new_events = Map.put(events, name, %Event{name: name, description: description, pid: event_pid, timeout: timeout})
                 send(pid, {:ok, msg_ref})
                 loop(%{state | events: new_events})
@@ -124,7 +133,7 @@ defmodule Reminder.ServerV3 do
     def handle_cancel(state = %State{events: events, clients: _clients}, name, pid, msg_ref) do
         new_events = case Map.pop(events, name) do
             {event, new_events} ->  
-                Reminder.EventServerV2.cancel(event.pid)
+                Reminder.EventV2.cancel(event.pid)
                 new_events
             nil -> events
         end
