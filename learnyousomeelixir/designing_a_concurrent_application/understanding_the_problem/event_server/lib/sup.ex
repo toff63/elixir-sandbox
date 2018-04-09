@@ -10,17 +10,17 @@ defmodule Sup do
 
         iex(1)> sup_pid = Sup.start(Reminder.ServerV2, [])
         #PID<0.128.0>
-        iex(2)> Process.whereis(:reminder_server)
+        iex(2)> Process.whereis(:'Reminder.Server')
         #PID<0.129.0>
-        iex(3)> Process.exit(Process.whereis(:reminder_server), :die)
+        iex(3)> Process.exit(Process.whereis(:'Reminder.Server'), :die)
 
         23:48:27.903 [info]  Process #PID<0.129.0> exited for reason :die
         true
-        iex(4)> Process.whereis(:reminder_server)
+        iex(4)> Process.whereis(:'Reminder.Server')
         #PID<0.132.0>
         iex(5)> Process.exit(sup_pid, :shutdown)
         true
-        iex(6)> Process.whereis(:reminder_server)
+        iex(6)> Process.whereis(:'Reminder.Server')
         nil
     """
 

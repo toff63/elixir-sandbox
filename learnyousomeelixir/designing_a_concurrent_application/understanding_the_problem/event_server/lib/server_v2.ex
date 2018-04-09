@@ -82,11 +82,11 @@ defmodule Reminder.ServerV2 do
     end
 
     def server_pid do
-        Process.whereis(:reminder_server)
+        Process.whereis(:'Reminder.Server')
     end
 
     def register(pid) do
-        Process.register(pid, :reminder_server)
+        Process.register(pid, :'Reminder.Server')
     end
     
     def init() do
