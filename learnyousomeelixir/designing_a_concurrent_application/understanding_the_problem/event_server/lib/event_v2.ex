@@ -1,4 +1,4 @@
-defmodule Reminder.EventServerV2 do
+defmodule Reminder.EventV2 do
   require Logger
 
   defmodule State do
@@ -12,7 +12,7 @@ defmodule Reminder.EventServerV2 do
 
   iex(1)> NaiveDateTime.utc_now()
   ~N[2018-04-02 18:49:44.776000]
-  iex(2)> Reminder.EventServerV2.start(self(), "Event", {{2018,04,02},{18,50,15}})
+  iex(2)> Reminder.EventV2.start(self(), "Event", {{2018,04,02},{18,50,15}})
   #PID<0.106.0>
   iex(3)> flush()
   :ok
@@ -23,9 +23,9 @@ defmodule Reminder.EventServerV2 do
   iex(6)> flush()
   {:done, "Event"}
   :ok
-  iex(7)> pid = Reminder.EventServerV2.start(self(), "Event", {{2200,01,01},{00,00,00}})
+  iex(7)> pid = Reminder.EventV2.start(self(), "Event", {{2200,01,01},{00,00,00}})
   #PID<0.112.0>
-  iex(8)> Reminder.EventServerV2.cancel(pid)
+  iex(8)> Reminder.EventV2.cancel(pid)
   :ok
   iex(9)> flush()
   {:ok, #Reference<0.0.6.976>}
