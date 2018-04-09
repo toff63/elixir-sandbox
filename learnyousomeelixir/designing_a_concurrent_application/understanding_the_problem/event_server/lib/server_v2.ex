@@ -128,7 +128,7 @@ defmodule Reminder.ServerV2 do
             {:done, name} -> handle_done(state, name)
             {:shutdown} -> exit(:shutdown)
             {:DOWN, ref, :process, _pid, _reason} -> loop(%{state | clients: Map.drop(clients, [ref])})
-            {:code_change} -> Reminder.ServerV3.loop(state)
+            {:code_change} -> Reminder.ServerV2.loop(state)
             unknown  -> 
                 Logger.info("Unknown message: #{inspect(unknown)}")
                 loop(state)
