@@ -4,6 +4,7 @@ defmodule Reminder.EventServer do
   end
 
   @doc """
+  This is a simple server that let you register reminders
   To test just run
 
       ied> parent = self()
