@@ -68,7 +68,7 @@ defmodule KittyServerv1 do
   @doc """
   Asynchronously returns the cat
   """
-  @spec return_cat(pid, Cat) :: atom
+  @spec return_cat(pid, struct()) :: :ok
   def return_cat(pid, cat = %Cat{}) do
     send(pid, {:return, cat})
     :ok

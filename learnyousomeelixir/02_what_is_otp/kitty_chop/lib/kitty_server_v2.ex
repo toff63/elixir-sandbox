@@ -20,7 +20,7 @@ defmodule KittyServerv2 do
   @doc """
   Asynchronously returns the cat
   """
-  @spec return_cat(pid, Cat) :: atom
+  @spec return_cat(pid, struct()) :: :ok
   def return_cat(pid, cat = %Cat{}) do
     MyServer.cast(pid, {:return, cat})
   end
