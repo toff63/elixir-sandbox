@@ -1,0 +1,48 @@
+$ ab -kc 20 -t 60 http://localhost:4001/hello
+This is ApacheBench, Version 2.3 <$Revision: 1807734 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+Finished 230 requests
+
+
+Server Software:        Cowboy
+Server Hostname:        localhost
+Server Port:            4001
+
+Document Path:          /hello
+Document Length:        11 bytes
+
+Concurrency Level:      20
+Time taken for tests:   60.079 seconds
+Complete requests:      230
+Failed requests:        221
+   (Connect: 0, Receive: 0, Length: 221, Exceptions: 0)
+Non-2xx responses:      221
+Keep-Alive requests:    230
+Total transferred:      19881 bytes
+HTML transferred:       99 bytes
+Requests per second:    3.83 [#/sec] (mean)
+Time per request:       5224.277 [ms] (mean)
+Time per request:       261.214 [ms] (mean, across all concurrent requests)
+Transfer rate:          0.32 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.2      0       1
+Processing:   548 4909 541.8   5002    5059
+Waiting:      548 4909 541.8   5002    5059
+Total:        548 4909 541.7   5002    5059
+
+Percentage of the requests served within a certain time (ms)
+  50%   5002
+  66%   5002
+  75%   5002
+  80%   5002
+  90%   5003
+  95%   5003
+  98%   5059
+  99%   5059
+ 100%   5059 (longest request)
+

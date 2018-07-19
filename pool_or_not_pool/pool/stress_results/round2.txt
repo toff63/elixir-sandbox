@@ -1,0 +1,52 @@
+$ ab -kc 20 -t 60 http://localhost:4001/hello
+This is ApacheBench, Version 2.3 <$Revision: 1807734 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+Finished 2382 requests
+
+
+Server Software:        Cowboy
+Server Hostname:        localhost
+Server Port:            4001
+
+Document Path:          /hello
+Document Length:        11 bytes
+
+Concurrency Level:      20
+Time taken for tests:   60.182 seconds
+Complete requests:      2382
+Failed requests:        0
+Keep-Alive requests:    2362
+Total transferred:      523940 bytes
+HTML transferred:       26202 bytes
+Requests per second:    39.58 [#/sec] (mean)
+Time per request:       505.306 [ms] (mean)
+Time per request:       25.265 [ms] (mean, across all concurrent requests)
+Transfer rate:          8.50 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.1      0       1
+Processing:   500  502   0.6    501     504
+Waiting:      500  502   0.6    501     504
+Total:        500  502   0.7    501     505
+WARNING: The median and mean for the processing time are not within a normal deviation
+        These results are probably not that reliable.
+WARNING: The median and mean for the waiting time are not within a normal deviation
+        These results are probably not that reliable.
+WARNING: The median and mean for the total time are not within a normal deviation
+        These results are probably not that reliable.
+
+Percentage of the requests served within a certain time (ms)
+  50%    501
+  66%    502
+  75%    502
+  80%    502
+  90%    502
+  95%    503
+  98%    503
+  99%    504
+ 100%    505 (longest request)
+
